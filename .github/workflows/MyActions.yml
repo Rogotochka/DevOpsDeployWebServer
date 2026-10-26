@@ -43,12 +43,18 @@ jobs:
           context:
           file: ./docker/php/Dockerfile
           push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/php:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/php:latest
       - name: Push nginx docker
         uses: docker/build-push-action@v7
         with:
           context:
           file: ./docker/nginx/Dockerfile
           push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/nginx:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/nginx:latest
   #========CD=======
   deploy:
     runs-on: ubuntu-latest
