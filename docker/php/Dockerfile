@@ -1,6 +1,6 @@
 FROM php:8.4-alpine
 
-RUN apt-get update && apt-get install -y libpq-dev \ #From https://ralphdeving.github.io/blog/post/quick-starter-php-project/
+RUN apt-get update && apt-get install -y libpq-dev \
 	&& docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
 	&& docker-php-ext-install pdo pdo_pgsql pgsql
 
