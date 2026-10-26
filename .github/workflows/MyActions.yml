@@ -17,6 +17,13 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v1
       - name: PHP syntax check
         run: find ./app -name '*.php' -print0 | xargs -0 -n1 php -l
+  deploy:
+    runs-on: ubuntu-latest
+    needs: tests 
+    steps: 
+      - uses: actions/checkout@v1
+      - name: archivete my projekt
+        run: ls -la
