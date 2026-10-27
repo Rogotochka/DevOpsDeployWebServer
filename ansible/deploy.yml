@@ -1,0 +1,91 @@
+---
+- name: Deploy app images
+  hosts: all
+  become: true
+  vars:
+    app_dir: /opt/php-prod-deploy
+    postgres_db: "{{ lookup('env', 'POSTGRES_DB') }}"
+    postgres_user: "{{ lookup('env', 'POSTGRES_USER') }}"
+    postgres_password: "{{ lookup('env', 'POSTGRES_PASSWORD') }}"
+
+  tasks:
+    - name: Install needed package
+      package:
+        name:
+          - ca-certificates
+          - curl
+        state: latest
+        update_cache: true
+
+    - name: Install Docker
+      package:
+        name:
+          - docker.io
+          - docker-compose
+        state: latest
+
+    - name: Ensure Docker enabled
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Create app directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0750"
+
+    - name: Log to GHCR
+      shell:
+        cmd: docker login ghcr.io --username "{{ lookup('env', 'GHCR_USERNAME') }}" --password-stdin
+        stdin: "{{ lookup('env', 'GHCR_READ_TOKEN') }}"
+      no_log: true
+      changed_when: true
+
+    - name: Install Compose file
+      copy:
+        src: "{{ playbook_dir }}/../compose.yaml"
+        dest: "{{ app_dir }}/compose.yaml"
+        owner: root
+        group: root
+        mode: "0640"
+
+    - name: Write env
+      template:
+        src: templates/app.env.j2
+        dest: "{{ app_dir }}/.env"
+        owner: root
+        group: root
+        mode: "0600"
+      no_log: true
+
+    - name: Pull images from compose
+      shell:
+        cmd: docker compose pull
+        chdir: "{{ app_dir }}"
+      changed_when: true
+
+    - name: Apply release
+      shell:
+        cmd: docker compose up -d
+        chdir: "{{ app_dir }}"
+      changed_when: true
+
+    - name: Wait for health endpoint
+      uri:
+        url: http://127.0.0.1/api/health
+        status_code: 200
+        return_content: true
+      register: health
+      retries: 12
+      delay: 5
+      until: health.status == 200
+
+    - name: Log out from GHCR
+      shell:
+        cmd: docker logout ghcr.io
+      changed_when: true
+      failed_when: false
