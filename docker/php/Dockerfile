@@ -6,3 +6,4 @@ RUN apk add --no-cache postgresql-dev \
 
 COPY --chown=www-data:www-data app/src/ /var/www/src/
 COPY --chown=www-data:www-data app/public/ /var/www/html/
+CMD ["php-fpm"]
