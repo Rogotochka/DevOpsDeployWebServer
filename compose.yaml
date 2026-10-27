@@ -2,7 +2,7 @@ version: "2.4"
 
 services:
   frontend:
-    image: rogotochka/nginx:${IMAGE_VERSION}
+    image: ghcr.io/rogotochka/nginx:${IMAGE_VERSION}
     restart: unless-stopped
     ports:
       - "80:80"
@@ -14,7 +14,7 @@ services:
       - backend
 
   backend:
-    image: rogotochka/php:${IMAGE_VERSION}
+    image: ghcr.io/rogotochka/php:${IMAGE_VERSION}
     restart: unless-stopped
     environment:
       DB_HOST: postgres
