@@ -1,4 +1,4 @@
-FROM php:8.4-alpine
+FROM php:8.4-fpm-alpine
 
 RUN apk add --no-cache postgresql-dev \
     && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
