@@ -93,13 +93,13 @@ jobs:
           IMAGE_VERSION: ${{ secrets.IMAGE_VERSION || 'latest' }} # Если передан sha commit-а запускать ту версию(так сказать rollback)
 
         run: |
-          set -eu
+          set -euo pipefail
           test -n "$PROD_HOST"
           test -n "$PROD_USER"
           test -n "$GHCR_READ_TOKEN"
           test -n "$POSTGRES_PASSWORD"
           ansible-playbook \
-            -i "$PROD_HOST" \
+            -i "${PROD_HOST}," \
             -u "$PROD_USER" \
             --private-key ~/.ssh/id_ed25519 \
             ansible/deploy.yml
