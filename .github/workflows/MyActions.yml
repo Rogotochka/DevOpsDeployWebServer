@@ -61,23 +61,46 @@ jobs:
     needs: build 
     steps: 
       - uses: actions/checkout@v4
-      - name: "Install Ansible"
-        uses: alex-oleshkevich/setup-ansible@VERSION 
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          version: "9.3.0"
-          
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.MY_SERVER_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.MY_KNOWN_HOSTS }}
-          
+          python-version: '3.12'
+      - name: Install Ansible
+        run: |
+          pip install ansible==13.7.0
+          pip install ansible-lint
+          ansible-galaxy collection install -r ansible/requirements.yml # download collections
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.PROD_KNOWN_HOSTS }}
+        run: |
+          mkdir -m 700 -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+  
       - name: Deploy with Ansible
         env:
           PROD_HOST: ${{ secrets.PROD_HOST }}
           PROD_USER: ${{ secrets.PROD_USER }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        run: echo "test"
+          IMAGE_VERSION: ${{ secrets.IMAGE_VERSION || 'latest' }} # Если передан sha commit-а запускать ту версию(так сказать rollback)
+
+        run: |
+          set -eu
+          test -n "$PROD_HOST"
+          test -n "$PROD_USER"
+          test -n "$GHCR_READ_TOKEN"
+          test -n "$POSTGRES_PASSWORD"
+          ansible-playbook \
+            -i "$PROD_HOST" \
+            -u "$PROD_USER" \
+            --private-key ~/.ssh/id_ed25519 \
+            ansible/deploy.yml
         
