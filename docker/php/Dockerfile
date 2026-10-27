@@ -1,8 +1,8 @@
-FROM php:8.4-alpine
+FROM php:8.3-fpm-alpine
 
-RUN apt-get update && apt-get install -y libpq-dev \
-	&& docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-	&& docker-php-ext-install pdo pdo_pgsql pgsql
+RUN apk add --no-cache postgresql-dev libonig-dev \
+    && docker-php-ext-install pdo_pgsql mbstring
 
+WORKDIR /var/www
 COPY --chown=www-data:www-data app/src/ /var/www/src/
 COPY --chown=www-data:www-data app/public/ /var/www/html/
