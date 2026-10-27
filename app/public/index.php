@@ -80,7 +80,7 @@ if (str_starts_with($path, '/api/')) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo — PHP + PostgreSQL</title>
+  <title>PHP + PostgreSQL</title>
   <link rel="stylesheet" href="/assets/style.css">
   <script src="/assets/app.js" defer></script>
 </head>
