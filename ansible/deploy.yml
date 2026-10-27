@@ -64,13 +64,13 @@
 
     - name: Pull images from compose
       shell:
-        cmd: docker compose pull
+        cmd: docker-compose pull
         chdir: "{{ app_dir }}"
       changed_when: true
 
     - name: Apply release
       shell:
-        cmd: docker compose up -d
+        cmd: docker-compose up -d
         chdir: "{{ app_dir }}"
       changed_when: true
 
