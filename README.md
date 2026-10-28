@@ -1,5 +1,8 @@
 # DevOpsDeployWebServer
 
+Status of Last Deployment :< br>
+<img src="https://github.com/Rogotochka/DevOpsDeployWebServer/workflows/xxxxxxxx/badge.svg?branch=master"><br>
+
 [![Live
 Demo](https://img.shields.io/badge/Live%20Demo-195.140.147.132-blue)](http://195.140.147.132)
 [![Repository](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/Rogotochka/DevOpsDeployWebServer)
