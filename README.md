@@ -8,11 +8,6 @@ Demo](https://img.shields.io/badge/Live%20Demo-195.140.147.132-blue)](http://195
 Actions и Ansible.
 
 -   **Демо:** http://195.140.147.132
--   **Исходный код:**
-    https://github.com/Rogotochka/DevOpsDeployWebServer
-
-> Проект предназначен для демонстрации практических навыков DevOps. Демо
-> доступно по HTTP; HTTPS в текущей конфигурации не заявлен.
 
 ## Что реализовано
 
