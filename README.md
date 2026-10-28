@@ -1,7 +1,7 @@
 # DevOpsDeployWebServer
 
 Status of Last Deployment:
-<img src="https://github.com/Rogotochka/DevOpsDeployWebServer/.github/workflows/MyActions.yml/badge.svg?branch=master"><br>
+<img src="https://github.com/Rogotochka/DevOpsDeployWebServer/blob/main/.github/workflows/MyActions.yml/badge.svg?branch=main"><br>
 
 [![Live
 Demo](https://img.shields.io/badge/Live%20Demo-195.140.147.132-blue)](http://195.140.147.132)
